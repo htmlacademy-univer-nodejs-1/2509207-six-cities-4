@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs';
-import path from 'node:path';
 import { createRequire } from 'node:module';
 import chalk from 'chalk';
+import { generateOffers } from './cli/generate.js';
+import { importOffers } from './cli/import.js';
 
 // Устанавливаем require для ES-модулей
 const require = createRequire(import.meta.url);
@@ -17,22 +17,11 @@ function showHelp() {
   console.log(`${chalk.green('--help')}\t\tПоказать помощь`);
   console.log(`${chalk.green('--version')}\t\tПоказать версию приложения`);
   console.log(`${chalk.green('--import <path>')}\tИмпортировать данные из TSV-файла`);
+  console.log(`${chalk.green('--generate <n> <path> <url>')}\tСгенерировать n предложений в .tsv из JSON-сервера`);
 }
 
 function showVersion() {
   console.log(chalk.yellow(`Версия приложения: ${packageJson.version}`));
-}
-
-function importData(filePath: string) {
-  const fullPath = path.resolve(filePath);
-
-  if (!fs.existsSync(fullPath)) {
-    throw new Error(`Файл не найден: ${fullPath}`);
-  }
-
-  const data = fs.readFileSync(fullPath, 'utf-8');
-  console.log(chalk.green('Импорт завершён. Содержимое:'));
-  console.log(data);
 }
 
 switch (command) {
@@ -48,11 +37,22 @@ switch (command) {
     if (!filePath) {
       throw new Error('Укажите путь к TSV-файлу после --import');
     }
-    importData(filePath);
+    importOffers(filePath);
+    break;
+  }
+  case '--generate': {
+    const count = Number(args[1]);
+    const filepath = args[2];
+    const url = args[3];
+
+    if (!count || !filepath || !url) {
+      throw new Error('Использование: --generate <кол-во> <путь к .tsv> <url>');
+    }
+
+    generateOffers(count, filepath, url).catch(console.error);
     break;
   }
   default:
     throw new Error(`Неизвестная команда: ${command}`);
     showHelp();
-
 }
