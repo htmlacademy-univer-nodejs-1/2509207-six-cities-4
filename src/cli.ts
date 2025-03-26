@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import path from 'path';
-import { createRequire } from 'module';
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
 import chalk from 'chalk';
 
 // Устанавливаем require для ES-модулей
@@ -14,9 +14,9 @@ const command = args[0];
 
 function showHelp() {
   console.log(chalk.blueBright('Доступные команды:'));
-  console.log(chalk.green('--help') + '\t\tПоказать помощь');
-  console.log(chalk.green('--version') + '\t\tПоказать версию приложения');
-  console.log(chalk.green('--import <path>') + '\tИмпортировать данные из TSV-файла');
+  console.log(`${chalk.green('--help')}\t\tПоказать помощь`);
+  console.log(`${chalk.green('--version')}\t\tПоказать версию приложения`);
+  console.log(`${chalk.green('--import <path>')}\tИмпортировать данные из TSV-файла`);
 }
 
 function showVersion() {
@@ -27,8 +27,7 @@ function importData(filePath: string) {
   const fullPath = path.resolve(filePath);
 
   if (!fs.existsSync(fullPath)) {
-    console.error(chalk.red(`Файл не найден: ${fullPath}`));
-    process.exit(1);
+    throw new Error(`Файл не найден: ${fullPath}`);
   }
 
   const data = fs.readFileSync(fullPath, 'utf-8');
@@ -44,16 +43,16 @@ switch (command) {
   case '--version':
     showVersion();
     break;
-  case '--import':
+  case '--import': {
     const filePath = args[1];
     if (!filePath) {
-      console.error(chalk.red('Укажите путь к TSV-файлу после --import'));
-      process.exit(1);
+      throw new Error('Укажите путь к TSV-файлу после --import');
     }
     importData(filePath);
     break;
+  }
   default:
-    console.error(chalk.red(`Неизвестная команда: ${command}`));
+    throw new Error(`Неизвестная команда: ${command}`);
     showHelp();
-    process.exit(1);
+
 }
