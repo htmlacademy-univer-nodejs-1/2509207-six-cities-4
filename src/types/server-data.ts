@@ -8,7 +8,6 @@ export interface ServerUser {
     password: string;
     type: UserType;
 }
-  
 export interface ServerOffer {
     title: string;
     description: string;

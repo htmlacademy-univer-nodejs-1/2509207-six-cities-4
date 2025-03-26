@@ -9,7 +9,9 @@ export async function importOffers(filePath: string) {
   console.log(chalk.blue(` Импорт данных из файла: ${filePath}`));
 
   for await (const line of rl) {
-    if (!line.trim()) continue;
+    if (!line.trim()) {
+      continue;
+    }
     const [
       title, description, publicationDate, city, previewImage,
       photosStr, isPremiumStr, isFavoriteStr, ratingStr, type,

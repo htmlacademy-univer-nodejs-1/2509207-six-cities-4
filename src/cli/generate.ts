@@ -66,16 +66,16 @@ async function generateOffers(count: number, filepath: string, url: string) {
         email: user.email,
         avatarUrl: user.avatarUrl ?? '',
         password: user.password,
-      type: user.type
-    },
-    commentCount: 0,
-    coordinates: {
-      latitude: base.coordinates.latitude,
-      longitude: base.coordinates.longitude
-    }
+        type: user.type
+      },
+      commentCount: 0,
+      coordinates: {
+        latitude: base.coordinates.latitude,
+        longitude: base.coordinates.longitude
+      }
     };
 
-    stream.write(formatToTSV(generated) + '\n');
+    stream.write(`${formatToTSV(generated)}\n`);
   }
 
   stream.end();

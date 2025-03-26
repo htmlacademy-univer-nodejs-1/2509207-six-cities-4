@@ -11,7 +11,7 @@ export function getRandomNumber(min: number, max: number): number {
 }
 
 export function getRandomRating(): number {
-  return parseFloat((Math.random() * 4 + 1).toFixed(1)); 
+  return parseFloat((Math.random() * 4 + 1).toFixed(1));
 }
 
 export function getRandomSubset<T>(items: T[]): T[] {
