@@ -1,0 +1,186 @@
+{
+  "users": [
+    {
+      "id": "user-1",
+      "name": "Мария",
+      "email": "maria@example.com",
+      "avatarUrl": "https://example.com/avatar1.jpg",
+      "password": "qwerty12",
+      "type": "pro"
+    },
+    {
+      "id": "user-2",
+      "name": "Алексей",
+      "email": "aleksei@example.com",
+      "avatarUrl": "https://example.com/avatar2.jpg",
+      "password": "pass789",
+      "type": "обычный"
+    },
+    {
+      "id": "user-3",
+      "name": "Игорь",
+      "email": "igor@example.com",
+      "avatarUrl": "https://example.com/avatar3.jpg",
+      "password": "zxcvbn12",
+      "type": "pro"
+    },
+    {
+      "id": "user-4",
+      "name": "Ольга",
+      "email": "olga@example.com",
+      "avatarUrl": "https://example.com/avatar4.jpg",
+      "password": "olga321",
+      "type": "обычный"
+    },
+    {
+      "id": "user-5",
+      "name": "Никита",
+      "email": "nikita@example.com",
+      "avatarUrl": "https://example.com/avatar5.jpg",
+      "password": "nikita88",
+      "type": "pro"
+    }
+  ],
+  "offers": [
+    {
+      "title": "Квартира с видом на Эйфелеву башню",
+      "description": "Уютная квартира в центре Парижа с видом на Эйфелеву башню. Отлично подойдёт для туристов.",
+      "publicationDate": "2025-03-25",
+      "city": "Paris",
+      "previewImage": "https://example.com/preview1.jpg",
+      "photos": [
+        "https://example.com/photo1.jpg",
+        "https://example.com/photo2.jpg",
+        "https://example.com/photo3.jpg",
+        "https://example.com/photo4.jpg",
+        "https://example.com/photo5.jpg",
+        "https://example.com/photo6.jpg"
+      ],
+      "isPremium": true,
+      "isFavorite": false,
+      "rating": 4.7,
+      "type": "apartment",
+      "roomCount": 2,
+      "guestCount": 4,
+      "price": 8500,
+      "amenities": ["Breakfast", "Fridge", "Towels"],
+      "userId": "user-1",
+      "coordinates": {
+        "latitude": 48.85661,
+        "longitude": 2.351499
+      }
+    },
+    {
+      "title": "Современная студия в Амстердаме",
+      "description": "Стильная студия для одного или двух человек. Рядом парк и метро.",
+      "publicationDate": "2025-03-24",
+      "city": "Amsterdam",
+      "previewImage": "https://example.com/preview2.jpg",
+      "photos": [
+        "https://example.com/a1.jpg",
+        "https://example.com/a2.jpg",
+        "https://example.com/a3.jpg",
+        "https://example.com/a4.jpg",
+        "https://example.com/a5.jpg",
+        "https://example.com/a6.jpg"
+      ],
+      "isPremium": false,
+      "isFavorite": true,
+      "rating": 4.3,
+      "type": "room",
+      "roomCount": 1,
+      "guestCount": 2,
+      "price": 5500,
+      "amenities": ["Air conditioning", "Washer"],
+      "userId": "user-2",
+      "coordinates": {
+        "latitude": 52.370216,
+        "longitude": 4.895168
+      }
+    },
+    {
+      "title": "Просторный дом в Гамбурге",
+      "description": "Большой дом с садом и террасой. Подходит для семейного отдыха.",
+      "publicationDate": "2025-03-23",
+      "city": "Hamburg",
+      "previewImage": "https://example.com/preview3.jpg",
+      "photos": [
+        "https://example.com/h1.jpg",
+        "https://example.com/h2.jpg",
+        "https://example.com/h3.jpg",
+        "https://example.com/h4.jpg",
+        "https://example.com/h5.jpg",
+        "https://example.com/h6.jpg"
+      ],
+      "isPremium": true,
+      "isFavorite": true,
+      "rating": 5.0,
+      "type": "house",
+      "roomCount": 4,
+      "guestCount": 6,
+      "price": 18000,
+      "amenities": ["Fridge", "Washer", "Baby seat", "Towels"],
+      "userId": "user-3",
+      "coordinates": {
+        "latitude": 53.550341,
+        "longitude": 10.000654
+      }
+    },
+    {
+      "title": "Недорогая квартира в Брюсселе",
+      "description": "Уютная бюджетная квартира в тихом районе города. Отличный вариант для краткосрочной аренды.",
+      "publicationDate": "2025-03-22",
+      "city": "Brussels",
+      "previewImage": "https://example.com/preview4.jpg",
+      "photos": [
+        "https://example.com/b1.jpg",
+        "https://example.com/b2.jpg",
+        "https://example.com/b3.jpg",
+        "https://example.com/b4.jpg",
+        "https://example.com/b5.jpg",
+        "https://example.com/b6.jpg"
+      ],
+      "isPremium": false,
+      "isFavorite": false,
+      "rating": 3.9,
+      "type": "apartment",
+      "roomCount": 2,
+      "guestCount": 2,
+      "price": 4200,
+      "amenities": ["Washer", "Towels"],
+      "userId": "user-4",
+      "coordinates": {
+        "latitude": 50.846557,
+        "longitude": 4.351697
+      }
+    },
+    {
+      "title": "Номер в центре Дюссельдорфа",
+      "description": "Отельный номер с бесплатным завтраком. Отличное местоположение в центре города.",
+      "publicationDate": "2025-03-21",
+      "city": "Dusseldorf",
+      "previewImage": "https://example.com/preview5.jpg",
+      "photos": [
+        "https://example.com/d1.jpg",
+        "https://example.com/d2.jpg",
+        "https://example.com/d3.jpg",
+        "https://example.com/d4.jpg",
+        "https://example.com/d5.jpg",
+        "https://example.com/d6.jpg"
+      ],
+      "isPremium": false,
+      "isFavorite": false,
+      "rating": 4.2,
+      "type": "hotel",
+      "roomCount": 2,
+      "guestCount": 3,
+      "price": 7600,
+      "amenities": ["Breakfast", "Laptop friendly workspace"],
+      "userId": "user-5",
+      "coordinates": {
+        "latitude": 51.225402,
+        "longitude": 6.776314
+      }
+    }
+  ]
+}
