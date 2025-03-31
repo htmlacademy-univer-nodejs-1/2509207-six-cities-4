@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import { generateOffers } from './cli/generate.js';
 import { importOffers } from './cli/import.js';
 
-// Устанавливаем require для ES-модулей
+
 const require = createRequire(import.meta.url);
 const packageJson = require('../package.json');
 
