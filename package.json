@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "npm run build && node ./dist/main.js",
+    "start:dev": "node --loader ts-node/esm ./src/main.ts | pino-pretty --colorize --translateTime SYS:standard",
     "build": "npm run clean && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
@@ -21,14 +22,17 @@
     "mock:server": "json-server --watch mocks/mock-server-data.json --port 3001"
   },
   "devDependencies": {
+    "@types/convict": "^6.1.6",
+    "@types/convict-format-with-validator": "^6.0.5",
     "@types/node": "18.17.17",
     "@typescript-eslint/eslint-plugin": "6.7.0",
     "@typescript-eslint/parser": "6.7.0",
     "eslint": "8.49.0",
     "eslint-config-htmlacademy": "9.1.1",
     "json-server": "^1.0.0-beta.3",
+    "pino-pretty": "^13.0.0",
     "rimraf": "5.0.1",
-    "ts-node": "10.9.1",
+    "ts-node": "^10.9.1",
     "typescript": "5.2.2"
   },
   "type": "module",
@@ -38,6 +42,13 @@
   },
   "dependencies": {
     "axios": "^1.8.4",
-    "chalk": "^5.4.1"
+    "chalk": "^5.4.1",
+    "convict": "^6.2.4",
+    "convict-format-with-validator": "^6.2.0",
+    "dotenv": "^16.4.7",
+    "inversify": "^7.3.0",
+    "pino": "^9.6.0",
+    "reflect-metadata": "^0.2.2",
+    "tslib": "^2.8.1"
   }
 }
