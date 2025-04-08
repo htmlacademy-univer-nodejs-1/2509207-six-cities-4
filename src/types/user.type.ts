@@ -1,6 +1,9 @@
-export type UserType = 'обычный' | 'pro';
+export enum UserType {
+  обычный = 'обычный',
+  pro = 'pro'
+}
 
-export interface User {
+export type User = {
   name: string;
   email: string;
   avatarUrl?: string;
