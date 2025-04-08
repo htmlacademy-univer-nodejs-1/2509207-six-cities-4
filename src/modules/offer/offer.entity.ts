@@ -2,19 +2,19 @@ import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@type
 import { UserEntity } from '../user/index.js';
 import { Amenity, City, HousingType, Coordinates } from '../../types/index.js';
 
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base { }
 
 @modelOptions({
-    schemaOptions: {
-        collection: 'offers',
-        timestamps: true,
-    }
+  schemaOptions: {
+    collection: 'offers',
+    timestamps: true,
+  }
 })
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class OfferEntity extends defaultClasses.TimeStamps {
     @prop({ required: true, minlength: 10, maxlength: 100 })
-    public title!: string;
+  public title!: string;
 
     @prop({ required: true, minlength: 20, maxlength: 1024 })
     public description!: string;
@@ -28,7 +28,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     @prop({ required: true })
     public previewImage!: string;
 
-    @prop({ required: true, validate: (v: string[]) => v.length == 6 })
+    @prop({ required: true, validate: (v: string[]) => v.length === 6 })
     public photos!: string[];
 
     @prop({ required: true })
@@ -56,8 +56,8 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     public amenities!: Amenity[];
 
     @prop({
-        ref: UserEntity,
-        required: true
+      ref: UserEntity,
+      required: true
     })
     public user!: Ref<UserEntity>;
 

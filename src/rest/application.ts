@@ -12,6 +12,7 @@ export class Application {
         @inject(Component.Config) private readonly config: Config<RestSchema>,
         @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
   ){ }
+
   private async _initDb() {
     const mongoUri = getMongoURI(
       this.config.get('DB_USER'),
@@ -28,7 +29,7 @@ export class Application {
     this.logger.info('Application initialization');
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
     this.logger.info('Init database…');
-     await this._initDb();
-     this.logger.info('Init database completed');
+    await this._initDb();
+    this.logger.info('Init database completed');
   }
 }

@@ -3,6 +3,7 @@ import { createReadStream } from 'node:fs';
 import readline from 'node:readline';
 import chalk from 'chalk';
 import { Container } from 'inversify';
+import { City, HousingType, Amenity } from '../../types/index.js';
 import { UserService } from '../../modules/user/user-service.interface.js';
 import { OfferService } from '../../modules/offer/offer-service.interface.js';
 import { CreateUserDto } from '../../modules/user/dto/create-user.dto.js';
@@ -94,17 +95,17 @@ export class ImportCommand implements Command {
         title,
         description,
         publicationDate: new Date(publicationDate),
-        city: city as any,
+        city: city as City,
         previewImage,
         photos: photosStr.split(','),
         isPremium: isPremiumStr === 'true',
         isFavorite: isFavoriteStr === 'true',
         rating: parseFloat(ratingStr),
-        type: type as any,
+        type: type as HousingType,
         roomCount: Number(roomCountStr),
         guestCount: Number(guestCountStr),
         price: Number(priceStr),
-        amenities: amenitiesStr.split(',') as any,
+        amenities: amenitiesStr.split(',') as Amenity[],
         user: user,
         commentCount: 0,
         coordinates: {
