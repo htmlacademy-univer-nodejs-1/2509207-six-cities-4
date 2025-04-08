@@ -13,13 +13,14 @@
   },
   "scripts": {
     "start": "npm run build && node ./dist/main.js",
-    "start:dev": "node --loader ts-node/esm ./src/main.ts | pino-pretty --colorize --translateTime SYS:standard",
+    "start:dev": "node --loader ts-node/esm ./src/main.rest.ts | pino-pretty --colorize --translateTime SYS:standard",
     "build": "npm run clean && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "ts-node",
-    "mock:server": "json-server --watch mocks/mock-server-data.json --port 3001"
+    "mock:server": "json-server --watch mocks/mock-server-data.json --port 3001",
+    "cli": "node --loader ts-node/esm ./src/main.cli.ts"
   },
   "devDependencies": {
     "@types/convict": "^6.1.6",
@@ -41,12 +42,14 @@
     "npm": ">=8"
   },
   "dependencies": {
+    "@typegoose/typegoose": "^12.14.0",
     "axios": "^1.8.4",
     "chalk": "^5.4.1",
     "convict": "^6.2.4",
     "convict-format-with-validator": "^6.2.0",
     "dotenv": "^16.4.7",
-    "inversify": "^7.3.0",
+    "inversify": "^6.0.2",
+    "mongoose": "^8.13.1",
     "pino": "^9.6.0",
     "reflect-metadata": "^0.2.2",
     "tslib": "^2.8.1"

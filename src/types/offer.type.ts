@@ -1,33 +1,40 @@
 import type { User } from './user.type.js';
 
-export type City =
-  | 'Paris'
-  | 'Cologne'
-  | 'Brussels'
-  | 'Amsterdam'
-  | 'Hamburg'
-  | 'Dusseldorf';
+export enum City{
+    Paris = 'Paris',
+    Cologne = 'Colonge',
+    Brussels = 'Brussels',
+    Amsterdam = 'Amsterdam',
+    Hamburg = 'Hamburg',
+    Dusseldorf = 'Dusseldorf'
+  }
 
-export type HousingType = 'apartment' | 'house' | 'room' | 'hotel';
+export enum HousingType {
+  Apartment = 'apartment',
+  House = 'house',
+  Room = 'room',
+  Hotel = 'hotel'
+}
 
-export type Amenity =
-  | 'Breakfast'
-  | 'Air conditioning'
-  | 'Laptop friendly workspace'
-  | 'Baby seat'
-  | 'Washer'
-  | 'Towels'
-  | 'Fridge';
+export enum Amenity {
+    Breakfast = 'Breakfast',
+    AirConditioning = 'Air conditioning',
+    LaptopFriendlyWorkspace = 'Laptop friendly workspace',
+    BabySeat = 'Baby seat',
+    Washer = 'Washer',
+    Towels = 'Towels',
+    Fridge = 'Fridge'
+  }
 
 export interface Coordinates {
   latitude: number;
   longitude: number;
 }
 
-export interface Offer {
+export type Offer = {
   title: string;
   description: string;
-  publicationDate: string;
+  publicationDate: Date;
   city: City;
   previewImage: string;
   photos: string[];

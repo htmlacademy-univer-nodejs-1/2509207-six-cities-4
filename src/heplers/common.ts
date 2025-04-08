@@ -19,3 +19,7 @@ export function getRandomSubset<T>(items: T[]): T[] {
   const count = getRandomNumber(1, items.length);
   return shuffled.slice(0, count);
 }
+
+export function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : '';
+}
