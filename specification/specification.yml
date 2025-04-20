@@ -1,0 +1,911 @@
+openapi: '3.0.3'
+info:
+  title: 'Шесть городов API'
+  description: >
+    REST API для сервиса «Шесть городов» — платформы по аренде жилья.
+    Позволяет пользователям регистрироваться, входить в систему, публиковать, редактировать и удалять объявления,
+    просматривать предложения, оставлять комментарии и управлять списком избранного.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: '1.0.0'
+servers:
+  - url: https://api.sixcities.local
+    description: Основной API сервер
+security:
+  - bearerAuth: []
+paths:
+  /offers:
+    post:
+      description: "Создание нового предложения по аренде. Доступно только авторизованным пользователям. Валидирует данные перед созданием."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOffer'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferDetails'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '406':
+          description: Not Acceptable
+        '400':
+          description: Bad Request
+        '415':
+          description: Unsupported Media Type
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+
+      tags:
+        - Offers
+    get:
+      description: "Получение списка предложений по аренде. По умолчанию возвращает до 60 записей, отсортированных по дате публикации. Доступно всем."
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: skip
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+                maxItems: 60
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Offers
+  /offers/{id}:
+    get:
+      description: "Получение детальной информации по одному предложению. Содержит все поля предложения и количество комментариев."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferDetails'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Offers
+    put:
+      description: "Редактирование предложения. Доступно только авторизованному владельцу. Валидирует перед сохранением."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutOffer'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferDetails'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Offers
+    delete:
+      description: "Удаление предложения. Доступно только авторизованному владельцу. При удалении предложения также удаляются его комментарии."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Offers
+  /offers/premium/{cityId}:
+    get:
+      description: "Получение списка премиальных предложений для указанного города. Возвращает не более 3 предложений."
+      parameters:
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+                maxItems: 3
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':  
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Premium Offers
+  /offers/favorite:
+    get:
+      description: "Получение предложений, добавленных в избранное текущим пользователем. Только для авторизованных клиентов."
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+                maxItems: 60
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Favorite Offers
+  /offers/favorite/{id}:
+    post:
+      description: "Добавление предложения в избранное. Доступно только авторизованным пользователям."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Favorite Offers
+    delete:
+      description: "Удаление предложения из избранного. Доступно только для авторизованных пользователей."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Favorite Offers
+  /offers/{id}/comments:
+    get:
+      description: "Получение списка последних комментариев к предложению (максимум 50), отсортированных по дате публикации."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Comments
+    post:
+      description: "Добавление комментария к предложению. Только для авторизованных пользователей. Данные валидируются."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComment'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Comments
+  /users:
+    post:
+      description: "Создание нового пользователя. Только для анонимных клиентов. Пароль сохраняется в виде хеша."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '409':
+          description: Conflict
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Users
+  /login:
+    post:
+      description: "Аутентификация пользователя. Возвращает токен доступа при успешном входе."
+      responses:
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Users
+  /logout:
+    delete:
+      description: "Завершение пользовательской сессии. Только для авторизованных пользователей."
+      parameters:
+        - name: X-Token
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Users
+  /check-session:
+    get:
+      description: "Проверка текущего состояния сессии и возвращение информации о пользователе. Только для авторизованных пользователей."
+      parameters:
+        - name: X-Token
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '400':
+          description: Bad Request
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        default:
+          description: Unexpected error
+      tags:
+        - Users
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - password
+        - userType
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 15
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          maxLength: 12
+        avatarUrl:
+          type: string
+        userType:
+          type: string
+          enum:
+            - обычный
+            - pro
+    CreateUser:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - userType
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 15
+        email:
+          type: string
+          format: email
+        avatarUrl:
+          type: string
+        password:
+          type: string
+          minLength: 6
+          maxLength: 12
+        userType:
+          type: string
+          enum:
+            - обычный
+            - pro
+    Comment:
+      type: object
+      required:
+        - text
+        - createdAt
+        - rating
+        - author_id
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        createdAt:
+          type: string
+          format: date-time
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+        author_id:
+          type: integer
+          minimum: 0
+    CreateComment:
+      type: object
+      required:
+        - text
+        - rating
+        - author_id
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+        author_id:
+          type: integer
+          minimum: 0
+    Offer:
+      type: object
+      required:
+        - id
+        - name
+        - publicationDate
+        - city
+        - previewUrl
+        - isPremium
+        - isFavorite
+        - rating
+        - housingType
+        - cost
+        - commentsNumber
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 10
+          maxLength: 100
+        publicationDate:
+          type: string
+          format: date-time
+        city:
+          type: string
+          enum:
+            - Paris
+            - Cologne
+            - Brussels
+            - Amsterdam
+            - Hamburg
+            - Dusseldorf
+        previewUrl:
+          type: string
+          format: uri
+        isPremium:
+          type: boolean
+        isFavorite:
+          type: boolean
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+        housingType:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+        cost:
+          type: number
+          minimum: 100
+          maximum: 100000
+        commentsNumber:
+          type: integer
+          minimum: 0
+    OfferDetails:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - publicationDate
+        - city
+        - previewImage
+        - imagesUrls
+        - isPremium
+        - isFavorite
+        - rating
+        - housingType
+        - roomsNumber
+        - guestsNumber
+        - price
+        - conveniences
+        - author_id
+        - commentsNumber
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 10
+          maxLength: 100
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+        publicationDate:
+          type: string
+          format: date-time
+        city:
+          type: string
+          enum:
+            - Paris
+            - Cologne
+            - Brussels
+            - Amsterdam
+            - Hamburg
+            - Dusseldorf
+        previewImage:
+          type: string
+          format: uri
+        imagesUrls:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            type: string
+            format: uri
+        isPremium:
+          type: boolean
+        isFavorite:
+          type: boolean
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+        housingType:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+        roomsNumber:
+          type: integer
+          minimum: 1
+          maximum: 8
+        guestsNumber:
+          type: integer
+          minimum: 1
+          maximum: 10
+        price:
+          type: number
+          minimum: 100
+          maximum: 100000
+        conveniences:
+          type: array
+          maxItems: 7
+          items:
+            type: string
+            enum:
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
+        author_id:
+          type: integer
+          minimum: 0
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+        commentsNumber:
+          type: integer
+          minimum: 0
+    CreateOffer:
+      type: object
+      required:
+        - name
+        - description
+        - city
+        - previewUrl
+        - imagesUrls
+        - isPremium
+        - housingType
+        - roomsNumber
+        - guestsNumber
+        - cost
+        - conveniences
+        - author_id
+        - latitude
+        - longitude
+      properties:
+        name:
+          type: string
+          minLength: 10
+          maxLength: 100
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+        city:
+          type: string
+          enum:
+            - Paris
+            - Cologne
+            - Brussels
+            - Amsterdam
+            - Hamburg
+            - Dusseldorf
+        previewUrl:
+          type: string
+          format: uri
+        imagesUrls:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            type: string
+            format: uri
+        isPremium:
+          type: boolean
+        housingType:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+        roomsNumber:
+          type: integer
+          minimum: 1
+          maximum: 8
+        guestsNumber:
+          type: integer
+          minimum: 1
+          maximum: 10
+        cost:
+          type: number
+          minimum: 100
+          maximum: 100000
+        conveniences:
+          type: array
+          maxItems: 7
+          items:
+            type: string
+            enum:
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
+        author_id:
+          type: integer
+          minimum: 0
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+    PutOffer:
+      type: object
+      required:
+        - name
+        - description
+        - city
+        - previewUrl
+        - imagesUrls
+        - isPremium
+        - housingType
+        - roomsNumber
+        - guestsNumber
+        - cost
+        - conveniences
+        - author_id
+        - latitude
+        - longitude
+      properties:
+        name:
+          type: string
+          minLength: 10
+          maxLength: 100
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+        city:
+          type: string
+          enum:
+            - Paris
+            - Cologne
+            - Brussels
+            - Amsterdam
+            - Hamburg
+            - Dusseldorf
+        previewUrl:
+          type: string
+          format: uri
+        imagesUrls:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            type: string
+            format: uri
+        isPremium:
+          type: boolean
+        housingType:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+        roomsNumber:
+          type: integer
+          minimum: 1
+          maximum: 8
+        guestsNumber:
+          type: integer
+          minimum: 1
+          maximum: 10
+        cost:
+          type: number
+          minimum: 100
+          maximum: 100000
+        conveniences:
+          type: array
+          maxItems: 7
+          items:
+            type: string
+            enum:
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
+        author_id:
+          type: integer
+          minimum: 0
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
