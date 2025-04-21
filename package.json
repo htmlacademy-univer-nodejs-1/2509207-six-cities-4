@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "npm run build && node ./dist/main.js",
-    "start:dev": "node --loader ts-node/esm ./src/main.rest.ts | pino-pretty --colorize --translateTime SYS:standard",
+    "start:dev": "nodemon",
     "build": "npm run clean && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
@@ -50,6 +50,7 @@
     "dotenv": "^16.4.7",
     "inversify": "^6.0.2",
     "mongoose": "^8.13.1",
+    "nodemon": "^3.1.9",
     "pino": "^9.6.0",
     "reflect-metadata": "^0.2.2",
     "tslib": "^2.8.1"
