@@ -8,8 +8,6 @@ import express, { Express } from 'express';
 import {Controller, ExceptionFilter} from '../core/rest/index.js';
 
 
-
-
 @injectable()
 export class Application {
   private server: Express;
@@ -22,7 +20,7 @@ export class Application {
         @inject(Component.ExceptionFilter) private readonly exceptionFilter: ExceptionFilter
   ){
     this.server = express();
-   }
+  }
 
   private async _initDb() {
     const mongoUri = getMongoURI(
@@ -66,7 +64,7 @@ export class Application {
     this.logger.info('Init app-level middleware');
     await this._initMiddleware();
     this.logger.info('App-level middleware initialization completed');
-    
+
     this.logger.info('Init controllers');
     await this._initControllers();
     this.logger.info('Controller initialization completed');
