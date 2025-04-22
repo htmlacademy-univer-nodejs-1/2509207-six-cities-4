@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-
+import { City } from '../../types/index.js';
 import { OfferService } from './offer-service.interface.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../core/logger/index.js';
@@ -7,6 +7,7 @@ import { DocumentType, types } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { PutOfferDto } from './dto/put-offer.dto.js';
+import { Types } from 'mongoose';
 
  @injectable()
 export class DefaultOfferService implements OfferService {
@@ -22,7 +23,7 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+  public async findById(offerId: string | Types.ObjectId): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel.findById(offerId).exec();
   }
 
@@ -32,7 +33,7 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async deleteById(id: string): Promise<void> {
+  public async deleteById(id: string | Types.ObjectId): Promise<void> {
     const result = await this.offerModel.findByIdAndDelete(id).exec();
     if (result) {
       this.logger.info(`Offer deleted: ${result.title}`);
@@ -43,19 +44,19 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.find().skip(skip).limit(limit).exec();
   }
 
-  public async findAllPremium(limit: number, skip: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel.find({ isPremium: true }).skip(skip).limit(limit).exec();
+  public async findAllPremium(city: City, limit: number, skip: number): Promise<DocumentType<OfferEntity>[]> {
+    return this.offerModel.find({ isPremium: true, city: city }).skip(skip).limit(limit).exec();
   }
 
-  public async findAllFavourite(userId: string, limit: number, skip: number): Promise<DocumentType<OfferEntity>[]> {
+  public async findAllFavourite(userId: string | Types.ObjectId, limit: number, skip: number): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel.find({ favouriteUsers: { $in: [userId] } }).skip(skip).limit(limit).exec();
   }
 
-  public async addToFavourite(offerId: string, userId: string): Promise<void> {
+  public async addToFavourite(offerId: string | Types.ObjectId, userId: string | Types.ObjectId): Promise<void> {
     await this.offerModel.findByIdAndUpdate(offerId, { $addToSet: { favouriteUsers: userId } }).exec();
   }
 
-  public async removeFromFavourite(offerId: string, userId: string): Promise<void> {
+  public async removeFromFavourite(offerId: string | Types.ObjectId, userId: string | Types.ObjectId): Promise<void> {
     await this.offerModel.findByIdAndUpdate(offerId, { $pull: { favouriteUsers: userId } }).exec();
   }
 

@@ -1,8 +1,8 @@
-import { UUID } from 'node:crypto';
 import { City, HousingType, Amenity, Coordinates } from '../../../types/index.js';
+import { Types } from 'mongoose';
 
 export class PutOfferDto {
-  public id!: UUID;
+  public id!: Types.ObjectId;
   public title!: string;
   public description!: string;
   public publicationDate!: Date;
