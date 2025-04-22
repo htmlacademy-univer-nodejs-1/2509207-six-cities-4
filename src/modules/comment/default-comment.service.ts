@@ -1,6 +1,5 @@
 import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
-import { UUID } from 'node:crypto';
 import 'reflect-metadata';
 import { Logger } from '../../core/logger/index.js';
 
@@ -9,6 +8,7 @@ import { OfferEntity } from '../offer/offer.entity.js';
 import { CommentService } from './comment-service.interface.js';
 import { CommentEntity } from './comment.entity.js';
 import { CreateCommentDto } from './dto/create-comment.dto.js';
+import { Types } from 'mongoose';
 
  @injectable()
 export class DefaultCommentService implements CommentService {
@@ -29,7 +29,7 @@ export class DefaultCommentService implements CommentService {
     return result;
   }
 
-  public async findAllForOffer(offerId: UUID, limit: number, skip: number): Promise<DocumentType<CommentEntity>[]> {
+  public async findAllForOffer(offerId: Types.ObjectId, limit: number, skip: number): Promise<DocumentType<CommentEntity>[]> {
     return await this.commentModel.find({offerId: offerId}).skip(skip).limit(limit);
   }
 }

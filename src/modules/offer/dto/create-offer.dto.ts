@@ -1,4 +1,5 @@
-import { City, HousingType, Amenity, Coordinates, User } from '../../../types/index.js';
+import { Types } from 'mongoose';
+import { City, HousingType, Amenity, Coordinates } from '../../../types/index.js';
 
 export class CreateOfferDto {
   public title!: string;
@@ -15,7 +16,7 @@ export class CreateOfferDto {
   public guestCount!: number;
   public price!: number;
   public amenities!: Amenity[];
-  public user!: User;
+  public authorId!: Types.ObjectId;
   public commentCount!: number;
   public coordinates!: Coordinates;
 }

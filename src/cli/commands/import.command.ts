@@ -106,7 +106,7 @@ export class ImportCommand implements Command {
         guestCount: Number(guestCountStr),
         price: Number(priceStr),
         amenities: amenitiesStr.split(',') as Amenity[],
-        user: user,
+        authorId: user.id,
         commentCount: 0,
         coordinates: {
           latitude: parseFloat(latitudeStr),
