@@ -37,7 +37,7 @@ export class UserController extends BaseController {
     });
   }
 
-  public async create({ body }: CreateUserRequest, res: Response, ): Promise<void> {
+  public async create({ body }: CreateUserRequest, res: Response,): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
 
     if (existsUser) {

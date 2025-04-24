@@ -91,7 +91,7 @@ export class OfferController extends BaseController {
     const offer = await this.offerService.findById(result.id);
     this.created(res, fillDTO(OfferRdo, offer));
   }
-  
+
 
   private async show({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
@@ -116,9 +116,9 @@ export class OfferController extends BaseController {
     const offer = await this.offerService.deleteById(offerId);
 
 
-     await this.commentService.deleteByOfferId(offerId);
+    await this.commentService.deleteByOfferId(offerId);
 
-     this.noContent(res, offer);
+    this.noContent(res, offer);
   }
 
   private async indexPremiumOffers(req: Request, res: Response): Promise<void> {

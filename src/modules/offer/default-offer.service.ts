@@ -37,7 +37,7 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel
       .findByIdAndDelete(offerId)
       .exec();
-   }
+  }
 
   public async findAll(limit: number, skip: number): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel.find().skip(skip).limit(limit).populate('userId').exec();

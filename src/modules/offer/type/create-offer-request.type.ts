@@ -1,5 +1,5 @@
 import { Request } from 'express';
- import { RequestBody, RequestParams } from '../../../core/rest/index.js';
- import { CreateOfferDto } from '../dto/create-offer.dto.js';
+import { RequestBody, RequestParams } from '../../../core/rest/index.js';
+import { CreateOfferDto } from '../dto/create-offer.dto.js';
 
- export type CreateOfferRequest = Request<RequestParams, RequestBody, CreateOfferDto>;
+export type CreateOfferRequest = Request<RequestParams, RequestBody, CreateOfferDto>;

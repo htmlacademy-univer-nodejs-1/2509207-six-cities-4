@@ -17,19 +17,19 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   public text!: string;
 
    @prop({required: true})
-   public rating!: number;
+  public rating!: number;
 
    @prop({
-    ref: 'UserEntity',
-    required: true
-  })
-  public userId?: Ref<UserEntity>;
+     ref: 'UserEntity',
+     required: true
+   })
+   public userId?: Ref<UserEntity>;
 
    @prop({
-    ref: 'OfferEntity',
-    required: true
-  })
-  public offerId!: Ref<OfferEntity>;
+     ref: 'OfferEntity',
+     required: true
+   })
+   public offerId!: Ref<OfferEntity>;
 
 }
 
