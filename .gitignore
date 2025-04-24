@@ -13,3 +13,5 @@ coverage
 mocks/*.tsv
 .42c
 *.http
+
+/upload/
