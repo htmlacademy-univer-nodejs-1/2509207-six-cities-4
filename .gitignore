@@ -12,6 +12,6 @@ coverage
 .env
 mocks/*.tsv
 .42c
-*.http
+
 
 /upload/
