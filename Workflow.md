@@ -65,7 +65,7 @@ npm run mock:server
 ```
 
 Поднимает тестовый JSON-сервер на основе файла `mocks/mock-server-data.json`.  
-Данные будут доступны по адресу http://localhost:3001.
+Данные будут доступны по адресу <http://localhost:3001>.
 
 #### Запустить проект
 
