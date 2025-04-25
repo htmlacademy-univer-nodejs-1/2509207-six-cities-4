@@ -1,5 +1,5 @@
 import { Logger } from './logger.interface.js';
-import { getErrorMessage } from '../../heplers/index.js';
+import { getErrorMessage } from '../../helpers/index.js';
 
 export class ConsoleLogger implements Logger {
   public debug(message: string, ...args: unknown[]): void {
