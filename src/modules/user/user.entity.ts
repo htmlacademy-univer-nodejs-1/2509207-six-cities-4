@@ -22,7 +22,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     @prop({ required: false, default: '' })
     public avatarPath?: string;
 
-    @prop({ required: true, select: false })
+    @prop({ required: true, default: '' })
     public password!: string;
 
     @prop({ required: true, enum: UserType, default: UserType.обычный })
@@ -45,6 +45,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
     public getPassword() {
       return this.password;
+    }
+
+    public verifyPassword(password: string, salt: string) {
+      const hashPassword = createSHA256(password, salt);
+      return hashPassword === this.password;
     }
 }
 

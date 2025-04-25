@@ -23,7 +23,7 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async findById(offerId: string | Types.ObjectId): Promise<DocumentType<OfferEntity> | null> {
+  public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel.findById(offerId).populate('userId').exec();
   }
 
@@ -43,20 +43,37 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.find().skip(skip).limit(limit).populate('userId').exec();
   }
 
-  public async findAllPremium(city: City, limit: number, skip: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel.find({ isPremium: true, city: city }).skip(skip).limit(limit).populate('userId').exec();
+
+  public async findTopPremiumByCity(city: City): Promise<DocumentType<OfferEntity>[]> {
+    return this.offerModel
+      .find({ isPremium: true, city })
+      .sort({ publicationDate: -1 })
+      .limit(3)
+      .populate('userId')
+      .exec();
   }
+
 
   public async findAllFavourite(userId: string | Types.ObjectId, limit: number, skip: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel.find({ favouriteUsers: { $in: [userId] } }).skip(skip).limit(limit).populate('userId').exec();
+    return this.offerModel
+      .find({ favouriteUserIds: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('userId')
+      .exec();
   }
 
-  public async addToFavourite(offerId: string | Types.ObjectId, userId: string | Types.ObjectId): Promise<void> {
-    await this.offerModel.findByIdAndUpdate(offerId, { $addToSet: { favouriteUsers: userId } }).exec();
+  public async addToFavourite(offerId: string, userId: string): Promise<void> {
+    await this.offerModel
+      .findByIdAndUpdate(offerId, { '$addToSet': { favouriteUserIds: userId } })
+      .exec();
   }
 
-  public async removeFromFavourite(offerId: string | Types.ObjectId, userId: string | Types.ObjectId): Promise<void> {
-    await this.offerModel.findByIdAndUpdate(offerId, { $pull: { favouriteUsers: userId } }).exec();
+  public async removeFromFavourite(offerId: string, userId: string): Promise<void> {
+    await this.offerModel
+      .findByIdAndUpdate(offerId, { '$pull': { favouriteUserIds: userId } })
+      .exec();
   }
 
   public async incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
