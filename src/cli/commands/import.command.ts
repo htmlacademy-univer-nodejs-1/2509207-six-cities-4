@@ -12,7 +12,7 @@ import { Config, RestConfig, RestSchema } from '../../core/config/index.js';
 import { Logger, PinoLogger } from '../../core/logger/index.js';
 import { DatabaseClient } from '../../core/database-client/database-client.interface.js';
 import { MongoDatabaseClient } from '../../core/database-client/mongo.database-client.js';
-import { getMongoURI } from '../../heplers/database.js';
+import { getMongoURI } from '../../helpers/database.js';
 import { DefaultUserService } from '../../modules/user/default-user.service.js';
 import { DefaultOfferService } from '../../modules/offer/default-offer.service.js';
 import { Component } from '../../types/index.js';

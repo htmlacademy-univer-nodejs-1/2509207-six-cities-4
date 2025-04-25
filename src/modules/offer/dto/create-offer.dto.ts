@@ -20,9 +20,6 @@ export class CreateOfferDto {
   @IsEnum(City, { message: CreateOfferValidationMessage.city.invalid })
   public city!: City;
 
-  @IsString({ message: CreateOfferValidationMessage.previewImage.invalidFormat })
-  public previewImage!: string;
-
   @IsArray({ message: CreateOfferValidationMessage.photos.invalidFormat })
   @ArrayMinSize(6, { message: CreateOfferValidationMessage.photos.minItems })
   @ArrayMaxSize(6, { message: CreateOfferValidationMessage.photos.maxItems })

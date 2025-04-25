@@ -1,6 +1,6 @@
 import { User, UserType } from '../../types/index.js';
 import { defaultClasses, getModelForClass, prop, modelOptions } from '@typegoose/typegoose';
-import { createSHA256 } from '../../heplers/index.js';
+import { createSHA256 } from '../../helpers/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base { }

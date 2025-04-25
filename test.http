@@ -7,8 +7,7 @@ Content-Type: application/json
 
 {
   "name": "alex ",
-  "email": "alex@mail.ru",
-  "avatarPath": "jack.jpg",
+  "email": "alex225@mail.ru",
   "password": "alexalex",
   "type": "pro"
 }
@@ -27,7 +26,7 @@ GET http://localhost:3000/users/login HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZvdmFAbWFpbC5ydSIsIm5hbWUiOiJ2b3ZhICIsInR5cGUiOiJwcm8iLCJpZCI6IjY4MGIxZjkzMjMyYWE3NTZmNjk1Njc0NyIsImlhdCI6MTc0NTU2NDkwNiwiZXhwIjoxNzQ1NzM3NzA2fQ.11YgPTddnf1DBawUFoAhWWB-oAsPEIAKhC-JK_xXcdY
 
 ### Отправить изображение
-POST http://localhost:3000/users/680aaecd38075f5441cff425/avatar HTTP/1.1
+POST http://localhost:3000/users/680b5eb1971161afef09c7a8/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -80,7 +79,19 @@ GET http://localhost:3000/offers?limit=5 HTTP/1.1
 GET http://localhost:3000/offers?limit=5&skip=10 HTTP/1.1
 
 ### Получить оффер по ID
-GET http://localhost:3000/offers/680bd2496d11fdb34d793a26 HTTP/1.1
+GET http://localhost:3000/offers/680c0ac7a848a350b489079f HTTP/1.1
+
+### Загрузить изображение для объявления
+POST http://localhost:3000/offers/680c0ac7a848a350b489079f/image HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZvdmFAbWFpbC5ydSIsIm5hbWUiOiJ2b3ZhICIsInR5cGUiOiJwcm8iLCJpZCI6IjY4MGIxZjkzMjMyYWE3NTZmNjk1Njc0NyIsImlhdCI6MTc0NTU2OTgwNCwiZXhwIjoxNzQ1NzQyNjA0fQ.YFvlCS1vSsTOyyiH9wpKIsRfuSgY8fIQ8Hv6L6mQXNg
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename=" .jpg"
+Content-Type: image/png
+
+< /Users/vovotata/Downloads/ .jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Обновить оффер по ID
 PATCH  http://localhost:3000/offers/680bd02648af1275010242f2 HTTP/1.1

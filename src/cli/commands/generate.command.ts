@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createWriteStream } from 'node:fs';
 import { ServerOffer, ServerUser } from '../../types/index.js';
 import { Offer } from '../../types/index.js';
-import { getRandomItem, getRandomBoolean, getRandomNumber, getRandomRating, getRandomSubset } from '../../heplers/index.js';
+import { getRandomItem, getRandomBoolean, getRandomNumber, getRandomRating, getRandomSubset } from '../../helpers/index.js';
 import { Command } from './command.interface.js';
 
 function formatToTSV(offer: Offer): string {
