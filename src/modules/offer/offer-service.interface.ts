@@ -12,7 +12,7 @@ export interface OfferService extends DocumentExists{
    updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
    deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
    findAll(limit: number, skip: number): Promise<DocumentType<OfferEntity>[]>;
-   findAllPremium(city: City, limit: number, skip: number): Promise<DocumentType<OfferEntity>[]>;
+   findTopPremiumByCity(city: City): Promise<DocumentType<OfferEntity>[]>;
    findAllFavourite(userId: string, limit: number, skip: number): Promise<DocumentType<OfferEntity>[]>;
    addToFavourite(offerId: string, userId: string): Promise<void>;
    removeFromFavourite(offerId: string, userId: string): Promise<void>;

@@ -1,4 +1,5 @@
 import { Expose, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { UserRdo } from '../../user/rdo/user.rdo.js';
 import { Coordinates } from '../../../types/index.js';
 
@@ -28,6 +29,12 @@ export class OfferRdo {
   public isPremium!: boolean;
 
   @Expose()
+  @Transform(({ obj }) => {
+    const currentUserId = obj.currentUserId as string | undefined;
+    return Array.isArray(obj.favouriteUserIds) && currentUserId
+      ? obj.favouriteUserIds.includes(currentUserId)
+      : false;
+  })
   public isFavorite!: boolean;
 
   @Expose()

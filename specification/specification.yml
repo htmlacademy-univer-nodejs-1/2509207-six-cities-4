@@ -18,6 +18,8 @@ paths:
   /offers:
     post:
       description: "Создание нового предложения по аренде. Доступно только авторизованным пользователям. Валидирует данные перед созданием."
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -44,7 +46,6 @@ paths:
           description: Too Many Requests
         default:
           description: Unexpected error
-
       tags:
         - Offers
     get:
@@ -82,15 +83,15 @@ paths:
           description: Unexpected error
       tags:
         - Offers
-  /offers/{id}:
+  /offers/{offerId}:
     get:
       description: "Получение детальной информации по одному предложению. Содержит все поля предложения и количество комментариев."
       parameters:
-        - name: id
+        - name: offerId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: OK
@@ -112,19 +113,21 @@ paths:
           description: Unexpected error
       tags:
         - Offers
-    put:
+    patch:
       description: "Редактирование предложения. Доступно только авторизованному владельцу. Валидирует перед сохранением."
+      security:
+        - bearerAuth: []
       parameters:
-        - name: id
+        - name: offerId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PutOffer'
+              $ref: '#/components/schemas/UpdateOffer'
       responses:
         '200':
           description: OK
@@ -148,12 +151,14 @@ paths:
         - Offers
     delete:
       description: "Удаление предложения. Доступно только авторизованному владельцу. При удалении предложения также удаляются его комментарии."
+      security:
+        - bearerAuth: []
       parameters:
-        - name: id
+        - name: offerId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '204':
           description: No Content
@@ -173,15 +178,15 @@ paths:
           description: Unexpected error
       tags:
         - Offers
-  /offers/premium/{cityId}:
+  /offers/premium/{city}:
     get:
       description: "Получение списка премиальных предложений для указанного города. Возвращает не более 3 предложений."
       parameters:
-        - name: cityId
+        - name: city
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: OK
@@ -206,9 +211,11 @@ paths:
           description: Unexpected error
       tags:
         - Premium Offers
-  /offers/favorite:
+  /offers/favourite:
     get:
       description: "Получение предложений, добавленных в избранное текущим пользователем. Только для авторизованных клиентов."
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -233,15 +240,17 @@ paths:
           description: Unexpected error
       tags:
         - Favorite Offers
-  /offers/favorite/{id}:
+  /offers/favourite/{offerId}:
     post:
       description: "Добавление предложения в избранное. Доступно только авторизованным пользователям."
+      security:
+        - bearerAuth: []
       parameters:
-        - name: id
+        - name: offerId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: OK
@@ -263,12 +272,14 @@ paths:
         - Favorite Offers
     delete:
       description: "Удаление предложения из избранного. Доступно только для авторизованных пользователей."
+      security:
+        - bearerAuth: []
       parameters:
-        - name: id
+        - name: offerId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '204':
           description: No Content
@@ -288,22 +299,24 @@ paths:
           description: Unexpected error
       tags:
         - Favorite Offers
-  /offers/{id}/comments:
+  /offers/{offerId}/comments:
     get:
       description: "Получение списка последних комментариев к предложению (максимум 50), отсортированных по дате публикации."
       parameters:
-        - name: id
+        - name: offerId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
         '401':
           description: Unauthorized
         '403':
@@ -317,44 +330,58 @@ paths:
         default:
           description: Unexpected error
       tags:
-        - Comments
+        - Offer Comments
+
+  /comments:
     post:
       description: "Добавление комментария к предложению. Только для авторизованных пользователей. Данные валидируются."
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+      security:
+        - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateComment'
+              type: object
+              required:
+                - text
+                - rating
+                - offerId
+              properties:
+                text:
+                  type: string
+                  minLength: 5
+                  maxLength: 1024
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                offerId:
+                  type: string
+                  format: uuid
       responses:
         '201':
-          description: OK
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
+        '400':
+          description: Bad Request
         '401':
           description: Unauthorized
         '403':
           description: Forbidden
-        '400':
-          description: Bad Request
         '404':
-          description: Not Found
-        '406':
-          description: Not Acceptable
+          description: Offer not found
         '429':
           description: Too Many Requests
         default:
           description: Unexpected error
       tags:
-        - Comments
-  /users:
+        - Comments 
+
+  /users/register:
     post:
       description: "Создание нового пользователя. Только для анонимных клиентов. Пароль сохраняется в виде хеша."
       requestBody:
@@ -383,12 +410,16 @@ paths:
           description: Unexpected error
       tags:
         - Users
-  /login:
+  /users/login:
     post:
       description: "Аутентификация пользователя. Возвращает токен доступа при успешном входе."
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoggedUser'
         '401':
           description: Unauthorized
         '403':
@@ -403,41 +434,10 @@ paths:
           description: Unexpected error
       tags:
         - Users
-  /logout:
-    delete:
-      description: "Завершение пользовательской сессии. Только для авторизованных пользователей."
-      parameters:
-        - name: X-Token
-          in: header
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: No Content
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-        '400':
-          description: Bad Request
-        '406':
-          description: Not Acceptable
-        '429':
-          description: Too Many Requests
-        default:
-          description: Unexpected error
-      tags:
-        - Users
-  /check-session:
     get:
-      description: "Проверка текущего состояния сессии и возвращение информации о пользователе. Только для авторизованных пользователей."
-      parameters:
-        - name: X-Token
-          in: header
-          required: true
-          schema:
-            type: string
+      description: "Проверка состояния пользователя — авторизован или нет. Доступно только для авторизованных клиентов."
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -473,11 +473,10 @@ components:
         - id
         - name
         - email
-        - password
-        - userType
+        - type
       properties:
         id:
-          type: integer
+          type: string
         name:
           type: string
           minLength: 1
@@ -485,13 +484,9 @@ components:
         email:
           type: string
           format: email
-        password:
+        avatarPath:
           type: string
-          minLength: 6
-          maxLength: 12
-        avatarUrl:
-          type: string
-        userType:
+        type:
           type: string
           enum:
             - обычный
@@ -502,7 +497,7 @@ components:
         - name
         - email
         - password
-        - userType
+        - type
       properties:
         name:
           type: string
@@ -511,13 +506,13 @@ components:
         email:
           type: string
           format: email
-        avatarUrl:
+        avatarPath:
           type: string
         password:
           type: string
           minLength: 6
           maxLength: 12
-        userType:
+        type:
           type: string
           enum:
             - обычный
@@ -542,14 +537,12 @@ components:
           minimum: 1
           maximum: 5
         author_id:
-          type: integer
-          minimum: 0
+          type: string
     CreateComment:
       type: object
       required:
         - text
         - rating
-        - author_id
       properties:
         text:
           type: string
@@ -559,27 +552,25 @@ components:
           type: number
           minimum: 1
           maximum: 5
-        author_id:
-          type: integer
-          minimum: 0
     Offer:
       type: object
       required:
         - id
-        - name
+        - title
         - publicationDate
         - city
-        - previewUrl
+        - previewImage
         - isPremium
         - isFavorite
         - rating
         - housingType
-        - cost
-        - commentsNumber
+        - price
+        - commentCount
+        - coordinates
       properties:
         id:
-          type: integer
-        name:
+          type: string
+        title:
           type: string
           minLength: 10
           maxLength: 100
@@ -595,7 +586,7 @@ components:
             - Amsterdam
             - Hamburg
             - Dusseldorf
-        previewUrl:
+        previewImage:
           type: string
           format: uri
         isPremium:
@@ -613,39 +604,52 @@ components:
             - house
             - room
             - hotel
-        cost:
+        price:
           type: number
           minimum: 100
           maximum: 100000
-        commentsNumber:
+        commentCount:
           type: integer
           minimum: 0
+        coordinates:
+          type: object
+          required:
+            - latitude
+            - longitude
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+            longitude:
+              type: number
+              minimum: -180
+              maximum: 180
     OfferDetails:
       type: object
       required:
         - id
-        - name
+        - title
         - description
         - publicationDate
         - city
         - previewImage
-        - imagesUrls
+        - photos
         - isPremium
         - isFavorite
         - rating
         - housingType
-        - roomsNumber
-        - guestsNumber
+        - roomCount
+        - guestCount
         - price
-        - conveniences
-        - author_id
-        - commentsNumber
-        - latitude
-        - longitude
+        - amenities
+        - userId
+        - commentCount
+        - coordinates
       properties:
         id:
-          type: integer
-        name:
+          type: string
+        title:
           type: string
           minLength: 10
           maxLength: 100
@@ -668,7 +672,7 @@ components:
         previewImage:
           type: string
           format: uri
-        imagesUrls:
+        photos:
           type: array
           minItems: 6
           maxItems: 6
@@ -690,11 +694,11 @@ components:
             - house
             - room
             - hotel
-        roomsNumber:
+        roomCount:
           type: integer
           minimum: 1
           maximum: 8
-        guestsNumber:
+        guestCount:
           type: integer
           minimum: 1
           maximum: 10
@@ -702,7 +706,7 @@ components:
           type: number
           minimum: 100
           maximum: 100000
-        conveniences:
+        amenities:
           type: array
           maxItems: 7
           items:
@@ -715,39 +719,43 @@ components:
               - Washer
               - Towels
               - Fridge
-        author_id:
+        userId:
+          type: string
+        commentCount:
           type: integer
           minimum: 0
-        latitude:
-          type: number
-          minimum: -90
-          maximum: 90
-        longitude:
-          type: number
-          minimum: -180
-          maximum: 180
-        commentsNumber:
-          type: integer
-          minimum: 0
+        coordinates:
+          type: object
+          required:
+            - latitude
+            - longitude
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+            longitude:
+              type: number
+              minimum: -180
+              maximum: 180
     CreateOffer:
       type: object
       required:
-        - name
+        - title
         - description
         - city
-        - previewUrl
-        - imagesUrls
+        - previewImage
+        - photos
         - isPremium
         - housingType
-        - roomsNumber
-        - guestsNumber
-        - cost
-        - conveniences
-        - author_id
-        - latitude
-        - longitude
+        - roomCount
+        - guestCount
+        - price
+        - amenities
+        - userId
+        - coordinates
       properties:
-        name:
+        title:
           type: string
           minLength: 10
           maxLength: 100
@@ -764,10 +772,10 @@ components:
             - Amsterdam
             - Hamburg
             - Dusseldorf
-        previewUrl:
+        previewImage:
           type: string
           format: uri
-        imagesUrls:
+        photos:
           type: array
           minItems: 6
           maxItems: 6
@@ -783,19 +791,19 @@ components:
             - house
             - room
             - hotel
-        roomsNumber:
+        roomCount:
           type: integer
           minimum: 1
           maximum: 8
-        guestsNumber:
+        guestCount:
           type: integer
           minimum: 1
           maximum: 10
-        cost:
+        price:
           type: number
           minimum: 100
           maximum: 100000
-        conveniences:
+        amenities:
           type: array
           maxItems: 7
           items:
@@ -808,36 +816,26 @@ components:
               - Washer
               - Towels
               - Fridge
-        author_id:
-          type: integer
-          minimum: 0
-        latitude:
-          type: number
-          minimum: -90
-          maximum: 90
-        longitude:
-          type: number
-          minimum: -180
-          maximum: 180
-    PutOffer:
+        userId:
+          type: string
+        coordinates:
+          type: object
+          required:
+            - latitude
+            - longitude
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+            longitude:
+              type: number
+              minimum: -180
+              maximum: 180
+    UpdateOffer:
       type: object
-      required:
-        - name
-        - description
-        - city
-        - previewUrl
-        - imagesUrls
-        - isPremium
-        - housingType
-        - roomsNumber
-        - guestsNumber
-        - cost
-        - conveniences
-        - author_id
-        - latitude
-        - longitude
       properties:
-        name:
+        title:
           type: string
           minLength: 10
           maxLength: 100
@@ -854,10 +852,10 @@ components:
             - Amsterdam
             - Hamburg
             - Dusseldorf
-        previewUrl:
+        previewImage:
           type: string
           format: uri
-        imagesUrls:
+        photos:
           type: array
           minItems: 6
           maxItems: 6
@@ -873,19 +871,19 @@ components:
             - house
             - room
             - hotel
-        roomsNumber:
+        roomCount:
           type: integer
           minimum: 1
           maximum: 8
-        guestsNumber:
+        guestCount:
           type: integer
           minimum: 1
           maximum: 10
-        cost:
+        price:
           type: number
           minimum: 100
           maximum: 100000
-        conveniences:
+        amenities:
           type: array
           maxItems: 7
           items:
@@ -898,14 +896,30 @@ components:
               - Washer
               - Towels
               - Fridge
-        author_id:
-          type: integer
-          minimum: 0
-        latitude:
-          type: number
-          minimum: -90
-          maximum: 90
-        longitude:
-          type: number
-          minimum: -180
-          maximum: 180
+        userId:
+          type: string
+        coordinates:
+          type: object
+          required:
+            - latitude
+            - longitude
+          properties:
+            latitude:
+              type: number
+              minimum: -90
+              maximum: 90
+            longitude:
+              type: number
+              minimum: -180
+              maximum: 180
+
+    LoggedUser:
+      type: object
+      properties:
+        token:
+          type: string
+        email:
+          type: string
+          format: email
+        
+      
