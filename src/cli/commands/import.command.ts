@@ -86,7 +86,7 @@ export class ImportCommand implements Command {
         email: userEmail,
         avatarPath: userAvatar,
         password: userPassword,
-        type: userType as UserType 
+        type: userType as UserType
       };
 
       const user = await userService.findOrCreate(userDto, config.get('SALT'));
