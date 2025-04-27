@@ -7,7 +7,8 @@ Content-Type: application/json
 
 {
   "name": "alex ",
-  "email": "alex225@mail.ru",
+  "email": "alexx225@mail.ru",
+  "avatarPath": "",
   "password": "alexalex",
   "type": "pro"
 }
@@ -17,7 +18,7 @@ POST http://localhost:3000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "alex@mail.ru",
+  "email": "alexx225@mail.ru",
   "password": "alexalex"
 }
 

@@ -23,7 +23,7 @@ function formatToTSV(offer: Offer): string {
     offer.amenities.join(','),
     offer.user.name,
     offer.user.email,
-    offer.user.avatarUrl,
+    offer.user.avatarPath,
     offer.user.password,
     offer.user.type,
     offer.coordinates.latitude,
@@ -77,7 +77,7 @@ export class GenerateCommand implements Command {
         user: {
           name: user.name,
           email: user.email,
-          avatarUrl: user.avatarUrl ?? '',
+          avatarPath: user.avatarPath ?? '',
           password: user.password,
           type: user.type
         },

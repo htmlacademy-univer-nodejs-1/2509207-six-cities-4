@@ -15,7 +15,10 @@ export class CreateOfferDto {
   public description!: string;
 
   @IsDateString({}, { message: CreateOfferValidationMessage.postDate.invalidFormat })
-  public publicationDate!: Date;
+  public publicationDate!: Date; 
+
+  @IsString({ message: CreateOfferValidationMessage.previewImage.invalidFormat })
+  public previewImage?: string;
 
   @IsEnum(City, { message: CreateOfferValidationMessage.city.invalid })
   public city!: City;

@@ -4,7 +4,7 @@ export interface ServerUser {
     id: string;
     name: string;
     email: string;
-    avatarUrl?: string;
+    avatarPath?: string;
     password: string;
     type: UserType;
 }

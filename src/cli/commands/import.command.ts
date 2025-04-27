@@ -3,7 +3,7 @@ import { createReadStream } from 'node:fs';
 import readline from 'node:readline';
 import chalk from 'chalk';
 import { Container } from 'inversify';
-import { City, HousingType, Amenity } from '../../types/index.js';
+import { City, HousingType, Amenity, UserType } from '../../types/index.js';
 import { UserService } from '../../modules/user/user-service.interface.js';
 import { OfferService } from '../../modules/offer/offer-service.interface.js';
 import { CreateUserDto } from '../../modules/user/dto/create-user.dto.js';
@@ -84,9 +84,9 @@ export class ImportCommand implements Command {
       const userDto: CreateUserDto = {
         name: userName,
         email: userEmail,
-        avatarUrl: userAvatar,
+        avatarPath: userAvatar,
         password: userPassword,
-        type: userType
+        type: userType as UserType 
       };
 
       const user = await userService.findOrCreate(userDto, config.get('SALT'));
@@ -106,7 +106,7 @@ export class ImportCommand implements Command {
         guestCount: Number(guestCountStr),
         price: Number(priceStr),
         amenities: amenitiesStr.split(',') as Amenity[],
-        authorId: user.id,
+        userId: user.id,
         commentCount: 0,
         coordinates: {
           latitude: parseFloat(latitudeStr),
